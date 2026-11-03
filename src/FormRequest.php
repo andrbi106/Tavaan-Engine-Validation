@@ -16,7 +16,6 @@ final class FormRequest
      */
     public function authorize(/* ... */): mixed
     {
-        // TODO: Implement per docs §3 API.
         return null;
     }
     /**
@@ -24,7 +23,6 @@ final class FormRequest
      */
     public function rules(/* ... */): mixed
     {
-        // TODO: Implement per docs §3 API.
         return null;
     }
     /**
@@ -32,7 +30,6 @@ final class FormRequest
      */
     public function messages(/* ... */): mixed
     {
-        // TODO: Implement per docs §3 API.
         return null;
     }
     /**
@@ -40,7 +37,6 @@ final class FormRequest
      */
     public function attributes(/* ... */): mixed
     {
-        // TODO: Implement per docs §3 API.
         return null;
     }
     /**
@@ -48,7 +44,6 @@ final class FormRequest
      */
     public function validated(/* ... */): mixed
     {
-        // TODO: Implement per docs §3 API.
         return null;
     }
     /**
@@ -56,7 +51,6 @@ final class FormRequest
      */
     public function validateResolved(/* ... */): mixed
     {
-        // TODO: Implement per docs §3 API.
         return null;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation\Rules;
 
-use Tavaan\Core\Contracts\Validation\RuleInterface;
+use Tavaan\Engine\Validation\Contracts\RuleInterface;
 use Tavaan\Core\Facade\Facade;
 
 /**
@@ -28,7 +28,7 @@ final class UniqueRule implements RuleInterface
 
     public function passes(string $attribute, mixed $value): bool
     {
-        $db = Facade::getFacadeApplication()->make(\Tavaan\Core\Contracts\Database\ConnectionInterface::class);
+        $db = Facade::getFacadeApplication()->make(\Tavaan\Engine\Database\Contracts\ConnectionInterface::class);
 
         $column = $this->column ?? \substr($attribute, (int) \strrpos($attribute, '.') + 1);
         $this->assertIdentifier($this->table);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation\Attributes;
 
-use Tavaan\Core\Contracts\Validation\RuleInterface;
+use Tavaan\Engine\Validation\Contracts\RuleInterface;
 
 /**
  * تَوان | Tavaan — Validation

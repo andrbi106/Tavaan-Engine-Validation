@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation;
 
-use Tavaan\Core\Contracts\Validation\RuleInterface;
+use Tavaan\Engine\Validation\Contracts\RuleInterface;
 use Tavaan\Engine\Validation\Attributes\ValidationAttribute;
 
 /**
@@ -97,7 +97,7 @@ final class DtoValidator
     /**
      * @return array<string, mixed> دادهٔ معتبرشده
      *
-     * @throws \Tavaan\Core\Exceptions\Validation\ValidationException
+     * @throws \Tavaan\Engine\Validation\Exceptions\ValidationException
      */
     public function validate(): array
     {

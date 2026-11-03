@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation;
 
-use Tavaan\Core\Contracts\Config\RepositoryInterface;
+use Tavaan\Engine\Config\Contracts\RepositoryInterface;
 use Tavaan\Core\Contracts\Container\ContainerInterface;
-use Tavaan\Core\Contracts\Database\ConnectionInterface;
-use Tavaan\Core\Contracts\I18n\TranslatorInterface;
+use Tavaan\Engine\Database\Contracts\ConnectionInterface;
+use Tavaan\Engine\I18n\Contracts\TranslatorInterface;
 
 /**
  * تَوان | Tavaan — Validation

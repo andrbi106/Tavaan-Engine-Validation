@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation\Concerns;
 
-use Tavaan\Core\Contracts\Http\UploadedFileInterface;
+use Tavaan\Engine\Http\Contracts\UploadedFileInterface;
 use Tavaan\Engine\Validation\Support\IranianChecks;
 use Tavaan\Support\Arr;
 
@@ -692,7 +692,7 @@ trait ValidatesAttributes
         return $identifier;
     }
 
-    private function dbTable(string $table): \Tavaan\Core\Contracts\Database\QueryBuilderInterface
+    private function dbTable(string $table): \Tavaan\Engine\Database\Contracts\QueryBuilderInterface
     {
         if ($this->db === null) {
             throw new \LogicException('Database rules (unique/exists) require a database connection.');

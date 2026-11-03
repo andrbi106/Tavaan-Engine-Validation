@@ -2,20 +2,35 @@
 
 declare(strict_types=1);
 
-/*
- * تَوان | Tavaan — Validation
- * config/validation.php — پیکربندی پیش‌فرض (DOC-051 §8).
+/*|--------------------------------------------------------------------------
+ | Validation Engine Configuration
+ |--------------------------------------------------------------------------
+ |
+ | پیکربندی موتور validation — همهٔ کلیدهای مستندشده در `docs/03-engines/validation.md` بخش «پیکربندی».
+ |
+ |@see https://github.com/Derogaramin/Tavaan-Doc/blob/main/docs/03-engines/validation.md
  */
 
 return [
-    'locale'              => null,      // null = app.locale
-    'bail'                => false,     // توقف در اولین خطای هر فیلد
-    'stop_on_first'       => false,     // توقف کل
-    'implicit_rules'      => ['required', 'required_if', 'filled', 'present'],
-    'exclude_unvalidated' => true,      // validated() فقط فیلدهای قاعده‌دار
-    'short_array_keys'    => false,
-    'password_rules'      => ['min:12', 'letters', 'numbers', 'not_compromised'],
-    'custom_rules'        => [],
-    'max_depth'           => 16,        // 🔒 DoS با آرایهٔ عمیق
-    'max_array_size'      => 10000,
+    /*| پیش‌فرض موتور (driver/store یا حالت فعال) */
+    'default' => env('VALIDATION_DEFAULT', 'default'),
+
+    /*| کلید کش (در صورت استفاده) */
+    'prefix' => env('VALIDATION_PREFIX', 'validation:'),
+
+    /*| تنظیمات لاگ */
+    'log' => [
+        'channel' => env('VALIDATION_LOG_CHANNEL', 'validation'),
+    ],
+
+    /*| Facade */
+    'facade' => [
+        'name' => 'Validator',
+        'accessor' => 'validator',
+    ],
+
+    /*| سایر کلیدها (طبق مستندات) */
+    'options' => [
+        // TODO: کلیدهای اضافی طبق سند §۶ (پیکربندی)
+    ],
 ];

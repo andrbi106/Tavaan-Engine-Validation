@@ -4,163 +4,74 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation;
 
-use Tavaan\Core\Contracts\Auth\Authenticatable;
-use Tavaan\Core\Exceptions\Authorization\AuthorizationException;
-use Tavaan\Core\Exceptions\Validation\ValidationException;
-use Tavaan\Core\Facade\Facade;
-use Tavaan\Engine\Http\Request;
+use Tavaan\Core\Contracts\Config\RepositoryInterface as Config;
 
 /**
- * تَوان | Tavaan — Validation
- * FormRequest — درخواست خود-اعتبارسنج (DOC-051 §5).
+ * FormRequest — پیاده‌سازی اصلی موتور.
  *
- * چرخهٔ زندگی (در Controller Resolution):
- * ```
- * 1. createFrom(request جاری)
- * 2. prepareForValidation()
- * 3. authorize() → false = AuthorizationException (403)
- * 4. Validator::make(all(), rules(), messages(), attributes())
- * 5. fail → ValidationException (422)
- * 6. validated() → DTO
- * 7. passedValidation()
- * ```
- *
- * @api 1.0
- * @see docs/03-engines/validation.md
+ * @see \Tavaan\Engine\Validation\Contracts\FormRequestInterface
  */
-abstract class FormRequest extends Request
+final class FormRequest implements Contracts\FormRequestInterface
 {
-    /** @var array<string, mixed>|null */
-    private ?array $validatedData = null;
-
-    private ?Validator $validatorInstance = null;
-
-    /** ساخت از درخواست جاری (توسط ControllerResolver فراخوانی می‌شود). */
-    public static function createFrom(Request $request): static
-    {
-        /** @var static $instance */
-        $instance = self::fromRequestInto(static::class, $request);
-
-        return $instance;
-    }
-
-    /** authorization — پیش‌فرض: مجاز. */
-    public function authorize(): bool
-    {
-        return true;
+    /**
+     * @param Config $config پیکربندی موتور
+     */
+    public function __construct(
+        private readonly Config $config,
+    ) {
     }
 
     /**
-     * قواعد اعتبارسنجی.
-     *
-     * @return array<string, string|list<mixed>>
+     * {@inheritdoc}
      */
-    abstract public function rules(): array;
-
-    /** @return array<string, string> */
-    public function messages(): array
+    public function authorize(/* ... */): mixed
     {
-        return [];
-    }
-
-    /** @return array<string, string> */
-    public function attributes(): array
-    {
-        return [];
-    }
-
-    /** نرمال‌سازی داده قبل از اعتبارسنجی (merge/replace). */
-    protected function prepareForValidation(): void
-    {
-    }
-
-    /** پس از موفقیت اعتبارسنجی. */
-    protected function passedValidation(): void
-    {
-    }
-
-    /** قلاب افزودن قاعدهٔ پویا به Validator. */
-    public function withValidator(Validator $validator): void
-    {
-    }
-
-    /** اجرای کامل چرخهٔ اعتبارسنجی. */
-    public function validateResolved(): void
-    {
-        $this->prepareForValidation();
-
-        if (!$this->authorize()) {
-            throw new AuthorizationException();
-        }
-
-        $factory = Facade::getFacadeApplication()->make('validator');
-        \assert($factory instanceof ValidatorFactory);
-
-        $validator = $factory->make($this->all(), $this->rules(), $this->messages(), $this->attributes());
-        $this->withValidator($validator);
-        $this->validatorInstance = $validator;
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator->errors()->toArray());
-        }
-
-        $this->validatedData = $validator->validated();
-        $this->passedValidation();
+        // TODO: پیاده‌سازی authorize مطابق مستندات (سند §3 API).
+        return null;
     }
 
     /**
-     * دادهٔ معتبرشده (فقط فیلدهای قاعده‌دار).
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function validated(?string $key = null, mixed $default = null): mixed
+    public function rules(/* ... */): mixed
     {
-        $data = $this->validatedData ??= [];
-
-        if ($key === null) {
-            return $data;
-        }
-
-        return \Tavaan\Support\Arr::get($data, $key, $default);
+        // TODO: پیاده‌سازی rules مطابق مستندات (سند §3 API).
+        return null;
     }
 
-    public function validator(): ?Validator
+    /**
+     * {@inheritdoc}
+     */
+    public function messages(/* ... */): mixed
     {
-        return $this->validatorInstance;
+        // TODO: پیاده‌سازی messages مطابق مستندات (سند §3 API).
+        return null;
     }
 
-    /** ادغام ورودی (برای prepareForValidation). */
-    public function merge(array $input): void
+    /**
+     * {@inheritdoc}
+     */
+    public function attributes(/* ... */): mixed
     {
-        foreach ($input as $key => $value) {
-            $this->postBagMutable()->set((string) $key, $value);
-        }
+        // TODO: پیاده‌سازی attributes مطابق مستندات (سند §3 API).
+        return null;
     }
 
-    /** جایگزینی کامل ورودی. */
-    public function replace(array $input): void
+    /**
+     * {@inheritdoc}
+     */
+    public function validated(/* ... */): mixed
     {
-        $this->postBagMutable()->replace($input);
+        // TODO: پیاده‌سازی validated مطابق مستندات (سند §3 API).
+        return null;
     }
 
-    private function postBagMutable(): \Tavaan\Engine\Http\ParameterBag
+    /**
+     * {@inheritdoc}
+     */
+    public function validateResolved(/* ... */): mixed
     {
-        return $this->postBag();
-    }
-
-    /** کاربر جاری (در صورت حضور موتور auth — M4). */
-    public function user(): ?Authenticatable
-    {
-        try {
-            if (\class_exists(\Tavaan\Core\Facade\Facades\Auth::class)) {
-                $user = \Tavaan\Core\Facade\Facades\Auth::user();
-
-                return $user instanceof Authenticatable ? $user : null;
-            }
-        } catch (\Throwable) {
-            // auth در دسترس نیست
-        }
-
+        // TODO: پیاده‌سازی validateResolved مطابق مستندات (سند §3 API).
         return null;
     }
 }

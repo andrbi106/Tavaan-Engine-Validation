@@ -1,10 +1,9 @@
 <?php
-
-declare(strict_types=1);
-
-/*| پیام‌های fa برای موتور validation */
-
 return [
-    'error_default' => 'خطای ناشناخته (validation)',
-    'not_configured' => 'موتور پیکربندی نشده است (validation)',
+    'error_required' => ':attribute الزامی است.',
+    'error_string' => ':attribute باید رشته باشد.',
+    'error_integer' => ':attribute باید عدد صحیح باشد.',
+    'error_email' => ':attribute باید ایمیل معتبر باشد.',
+    'error_min' => ':attribute باید حداقل :min باشد.',
+    'error_max' => ':attribute باید حداکثر :max باشد.',
 ];

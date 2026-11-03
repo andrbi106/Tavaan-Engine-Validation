@@ -4,74 +4,157 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation;
 
-use Tavaan\Core\Contracts\Config\RepositoryInterface as Config;
+use Tavaan\Engine\Validation\Contracts\RuleInterface;
+use Tavaan\Engine\Validation\Rules\Required;
+use Tavaan\Engine\Validation\Rules\StringType;
+use Tavaan\Engine\Validation\Rules\Integer;
+use Tavaan\Engine\Validation\Rules\Numeric;
+use Tavaan\Engine\Validation\Rules\Email;
+use Tavaan\Engine\Validation\Rules\Min;
+use Tavaan\Engine\Validation\Rules\Max;
+use Tavaan\Engine\Validation\Rules\Between;
+use Tavaan\Engine\Validation\Rules\In;
+use Tavaan\Engine\Validation\Rules\Nullable;
+use Tavaan\Engine\Validation\Rules\BooleanType;
+use Tavaan\Engine\Validation\Rules\ArrayType;
+use Tavaan\Engine\Validation\Rules\Confirmed;
+use Tavaan\Engine\Validation\Rules\Regex;
+use Tavaan\Engine\Validation\Rules\IranMobile;
 
 /**
- * Validator — پیاده‌سازی اصلی موتور.
+ * Validator — اعتبارسنجی داده‌ها.
  *
- * @see \Tavaan\Engine\Validation\Contracts\ValidatorInterface
+ * @see docs/03-engines/validation.md (DOC-051)
  */
-final class Validator implements Contracts\ValidatorInterface
+final class Validator
 {
     /**
-     * @param Config $config پیکربندی موتور
+     * @param array<string, mixed> $data
+     * @param array<string, list<string|RuleInterface>> $rules
+     * @param array<string, string> $messages
+     * @param array<string, string> $attributes
      */
     public function __construct(
-        private readonly Config $config,
+        private array $data,
+        private readonly array $rules = [],
+        private readonly array $messages = [],
+        private readonly array $attributes = [],
     ) {
     }
 
     /**
-     * {@inheritdoc}
+     * @param array<string, mixed> $data
+     * @param array<string, list<string|RuleInterface>> $rules
      */
-    public function make(/* ... */): mixed
+    public static function make(array $data, array $rules, array $messages = [], array $attributes = []): self
     {
-        // TODO: پیاده‌سازی make مطابق مستندات (سند §3 API).
-        return null;
+        return new self($data, $rules, $messages, $attributes);
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<string, list<string>>
      */
-    public function validate(/* ... */): mixed
+    public function errors(): array
     {
-        // TODO: پیاده‌سازی validate مطابق مستندات (سند §3 API).
-        return null;
+        $errors = [];
+        foreach ($this->rules as $field => $rules) {
+            $rules = (array) $rules;
+            $value = $this->data[$field] ?? null;
+            // If nullable and value is null, skip other rules
+            $nullable = false;
+            foreach ($rules as $rule) {
+                if ($rule instanceof Nullable) {
+                    $nullable = true;
+                    break;
+                }
+                if (\is_string($rule) && $rule === 'nullable') {
+                    $nullable = true;
+                    break;
+                }
+            }
+            if ($nullable && $value === null) continue;
+            foreach ($rules as $rule) {
+                $ruleInstance = $this->resolveRule($rule);
+                if ($ruleInstance === null) continue;
+                if ($ruleInstance instanceof Nullable) continue;
+                if (!$ruleInstance->passes($field, $value, $this->data)) {
+                    $message = $this->messages[$field] ?? $ruleInstance->message();
+                    $message = \str_replace(':attribute', $this->attributes[$field] ?? $field, $message);
+                    $errors[$field][] = $message;
+                    // Stop at first error for this field
+                    break;
+                }
+            }
+        }
+        return $errors;
+    }
+
+    public function passes(): bool
+    {
+        return empty($this->errors());
+    }
+
+    public function fails(): bool
+    {
+        return !$this->passes();
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<string, mixed>
      */
-    public function extend(/* ... */): mixed
+    public function validate(): array
     {
-        // TODO: پیاده‌سازی extend مطابق مستندات (سند §3 API).
-        return null;
+        if ($this->fails()) {
+            throw new Exceptions\ValidationException($this->errors());
+        }
+        return \array_intersect_key($this->data, $this->rules);
     }
 
     /**
-     * {@inheritdoc}
+     * @return list<string>
      */
-    public function replacer(/* ... */): mixed
+    public function allErrors(): array
     {
-        // TODO: پیاده‌سازی replacer مطابق مستندات (سند §3 API).
-        return null;
+        $all = [];
+        foreach ($this->errors() as $errors) {
+            foreach ($errors as $e) $all[] = $e;
+        }
+        return $all;
+    }
+
+    private function resolveRule(string|RuleInterface $rule): ?RuleInterface
+    {
+        if ($rule instanceof RuleInterface) return $rule;
+        if (!\is_string($rule)) return null;
+        // Parse "name:param1,param2"
+        $parts = \explode(':', $rule, 2);
+        $name = $parts[0];
+        $params = isset($parts[1]) ? \explode(',', $parts[1]) : [];
+        return $this->createRule($name, $params);
     }
 
     /**
-     * {@inheritdoc}
+     * @param list<string> $params
      */
-    public function forDto(/* ... */): mixed
+    private function createRule(string $name, array $params): ?RuleInterface
     {
-        // TODO: پیاده‌سازی forDto مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sometimes(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی sometimes مطابق مستندات (سند §3 API).
-        return null;
+        return match ($name) {
+            'required' => new Required(),
+            'string' => new StringType(),
+            'integer', 'int' => new Integer(),
+            'numeric' => new Numeric(),
+            'email' => new Email(),
+            'boolean', 'bool' => new BooleanType(),
+            'array' => new ArrayType(),
+            'nullable' => new Nullable(),
+            'confirmed' => new Confirmed(),
+            'iran_mobile' => new IranMobile(),
+            'min' => new Min((int) ($params[0] ?? 0)),
+            'max' => new Max((int) ($params[0] ?? 0)),
+            'between' => new Between((int) ($params[0] ?? 0), (int) ($params[1] ?? 0)),
+            'in' => new In($params),
+            'regex' => new Regex($params[0] ?? '//'),
+            default => null,
+        };
     }
 }

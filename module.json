@@ -11,20 +11,11 @@
     }
   },
   "providers": [
-    "Tavaan\\Engine\\Validation\\ValidatorServiceProvider"
+    "Tavaan\\Engine\\Validation\\ValidationServiceProvider"
   ],
   "requires": {
     "php": ">=8.2",
-    "engines": [
-      "i18n",
-      "config"
-    ]
-  },
-  "soft_requires": {
-    "engines": [
-      "database",
-      "http"
-    ]
+    "engines": ["i18n", "config"]
   },
   "config": {
     "file": "config/validation.php",
@@ -36,6 +27,5 @@
     "name": "Validator",
     "accessor": "validator"
   },
-  "docs": "docs/03-engines/validation.md",
-  "notes": "M3 — ۸۵+ قاعده (شامل قواعد ایرانی 🇮🇷)، FormRequest، Attribute-based، wildcard، ReDoS guard."
+  "docs": "docs/03-engines/validation.md"
 }

@@ -157,4 +157,37 @@ final class Validator
             default => null,
         };
     }
+
+    /**
+     * extend
+     */
+    public function extend(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
+    /**
+     * forDto
+     */
+    public function forDto(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
+    /**
+     * replacer
+     */
+    public function replacer(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
+    /**
+     * sometimes
+     */
+    public function sometimes(/* ... */): mixed
+    {
+        // TODO: Implement per docs.
+        return null;
+    }
 }

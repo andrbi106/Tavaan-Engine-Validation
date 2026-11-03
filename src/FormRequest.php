@@ -4,53 +4,73 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation;
 
-/**
- * FormRequest — پیاده‌سازی مطابق مستندات.
- *
- * @see docs/03-engines/ (YAML machine-readable block)
- */
-final class FormRequest
+abstract class FormRequest
 {
-    /**
-     * authorize
-     */
-    public function authorize()
+    protected array $data = [];
+    protected ?Validator $validator = null;
+    protected bool $passed = false;
+
+    public function __construct(array $data = [])
     {
-        return null;
+        $this->data = $data;
     }
-    /**
-     * rules
-     */
-    public function rules()
+
+    public function authorize(): bool
     {
-        return null;
+        return true;
     }
-    /**
-     * messages
-     */
-    public function messages()
+
+    abstract public function rules(): array;
+
+    public function messages(): array
     {
-        return null;
+        return [];
     }
-    /**
-     * attributes
-     */
-    public function attributes()
+
+    public function attributes(): array
     {
-        return null;
+        return [];
     }
-    /**
-     * validated
-     */
-    public function validated()
+
+    public function validated(): array
     {
-        return null;
+        if (!$this->passed) {
+            throw new Exceptions\ValidationException($this->validator?->errors() ?? []);
+        }
+        return array_intersect_key($this->data, $this->rules());
     }
-    /**
-     * validateResolved
-     */
-    public function validateResolved()
+
+    public function validateResolved(): void
     {
-        return null;
+        if (!$this->authorize()) {
+            throw new \RuntimeException('Unauthorized.');
+        }
+        $this->validator = Validator::make(
+            $this->data,
+            $this->rules(),
+            $this->messages(),
+            $this->attributes()
+        );
+        $this->passed = $this->validator->passes();
+        if (!$this->passed) {
+            throw new Exceptions\ValidationException($this->validator->errors());
+        }
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    public function setData(array $data): self
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    public function merge(array $data): self
+    {
+        $this->data = array_merge($this->data, $data);
+        return $this;
     }
 }

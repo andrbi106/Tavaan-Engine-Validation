@@ -161,29 +161,36 @@ final class Validator
     /**
      * extend
      */
-    public function extend()
+    public function extend(string $rule, callable $callback): self
     {
-        return null;
+        $this->customRules[$rule] = $callback;
+        return $this;
     }
     /**
      * forDto
      */
-    public function forDto()
+    public function forDto(string $dtoClass): mixed
     {
-        return null;
+        $data = $this->validate();
+        return new $dtoClass($data);
     }
     /**
      * replacer
      */
-    public function replacer()
+    public function replacer(string $rule, callable $callback): self
     {
-        return null;
+        $this->replacers[$rule] = $callback;
+        return $this;
     }
     /**
      * sometimes
      */
-    public function sometimes()
+    public function sometimes(string $field, array|string $rules, callable $callback): self
     {
-        return null;
+        if ($callback($this->data)) {
+            $existing = $this->rules[$field] ?? [];
+            $this->rules[$field] = array_merge($existing, (array) $rules);
+        }
+        return $this;
     }
 }

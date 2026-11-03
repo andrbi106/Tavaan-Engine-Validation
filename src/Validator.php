@@ -161,28 +161,28 @@ final class Validator
     /**
      * extend
      */
-    public function extend(/* ... */): mixed
+    public function extend()
     {
         return null;
     }
     /**
      * forDto
      */
-    public function forDto(/* ... */): mixed
+    public function forDto()
     {
         return null;
     }
     /**
      * replacer
      */
-    public function replacer(/* ... */): mixed
+    public function replacer()
     {
         return null;
     }
     /**
      * sometimes
      */
-    public function sometimes(/* ... */): mixed
+    public function sometimes()
     {
         return null;
     }

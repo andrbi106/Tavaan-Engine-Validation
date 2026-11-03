@@ -14,42 +14,42 @@ final class FormRequest
     /**
      * authorize
      */
-    public function authorize(/* ... */): mixed
+    public function authorize()
     {
         return null;
     }
     /**
      * rules
      */
-    public function rules(/* ... */): mixed
+    public function rules()
     {
         return null;
     }
     /**
      * messages
      */
-    public function messages(/* ... */): mixed
+    public function messages()
     {
         return null;
     }
     /**
      * attributes
      */
-    public function attributes(/* ... */): mixed
+    public function attributes()
     {
         return null;
     }
     /**
      * validated
      */
-    public function validated(/* ... */): mixed
+    public function validated()
     {
         return null;
     }
     /**
      * validateResolved
      */
-    public function validateResolved(/* ... */): mixed
+    public function validateResolved()
     {
         return null;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation\Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Tavaan\Testing\TestCase;
 use Tavaan\Engine\Validation\Validator;
 use Tavaan\Engine\Validation\Rules\Required;
 use Tavaan\Engine\Validation\Rules\Email;

@@ -15,7 +15,10 @@
   ],
   "requires": {
     "php": ">=8.2",
-    "engines": ["i18n", "config"]
+    "engines": [
+      "i18n",
+      "config"
+    ]
   },
   "config": {
     "file": "config/validation.php",
@@ -27,5 +30,6 @@
     "name": "Validator",
     "accessor": "validator"
   },
-  "docs": "docs/03-engines/validation.md"
+  "docs": "docs/03-engines/validation.md",
+  "class": "Tavaan\\Engine\\Validation\\ValidationEngine"
 }

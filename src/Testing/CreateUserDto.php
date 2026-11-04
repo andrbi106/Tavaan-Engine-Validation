@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Validation\Testing;
 
-use Tavaan\Engine\Validation\Attributes\Between;
-use Tavaan\Engine\Validation\Attributes\Email;
-use Tavaan\Engine\Validation\Attributes\Integer;
-use Tavaan\Engine\Validation\Attributes\IranMobile;
-use Tavaan\Engine\Validation\Attributes\MaxLength;
-use Tavaan\Engine\Validation\Attributes\Required;
+use Tavaan\Engine\Validation\Rules\Between;
+use Tavaan\Engine\Validation\Rules\Email;
+use Tavaan\Engine\Validation\Rules\Integer;
+use Tavaan\Engine\Validation\Rules\IranMobile;
+use Tavaan\Engine\Validation\Rules\MaxLength;
+use Tavaan\Engine\Validation\Rules\Required;
 
 /**
  * تَوان | Tavaan — Validation
